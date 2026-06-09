@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "remote" {
-    organization = "YOUR_TFC_ORGANIZATION_NAME"
+    organization = "Bhanu_Teja"
     workspaces {
       name = "aws-eks-poc"
     }
