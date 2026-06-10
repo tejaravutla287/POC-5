@@ -60,7 +60,10 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  # FIX: Clean flags to completely bypass KMS key/policy generation 
+  # FIX: Explicitly pass a null list to drop the block structure entirely 
+  # This stops the internal validation from evaluating provider_key_arn
+  cluster_encryption_config = []
+
   create_kms_key                  = false
   attach_cluster_encryption_policy = false
 
