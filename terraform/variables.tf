@@ -6,6 +6,6 @@ variable "aws_region" {
 
 variable "cluster_name" {
   type        = string
-  default     = "poc-eks-cluster"
+  default     = "poc-eks-cluster-v2"
   description = "Name of the EKS Cluster"
 }
