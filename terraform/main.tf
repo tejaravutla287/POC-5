@@ -7,7 +7,6 @@ terraform {
     }
   }
 
-  # FIXED: Updated block style and changed workspace name from aws-eks-poc to POC-5
   cloud {
     organization = "Bhanu_Teja"
     workspaces {
@@ -54,15 +53,16 @@ module "eks" {
   version = "~> 20.0"
 
   cluster_name    = var.cluster_name
-  cluster_version = "1.30" # Upgraded to remain on a fully active AWS supported version
+  cluster_version = "1.30"
 
   cluster_endpoint_public_access = true
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  create_cloudwatch_log_group = false
-  create_kms_key = false
+  # FIX: Clean flags to completely bypass KMS key/policy generation 
+  create_kms_key                  = false
+  attach_cluster_encryption_policy = false
 
   eks_managed_node_groups = {
     poc_nodes = {
