@@ -1,13 +1,21 @@
-name: AWS EKS Deployment via TFC
+name: Flexible AWS EKS Infrastructure Pipeline
 
 on:
-  push:
-    branches:
-      - main
+  # Enables manual execution via the GitHub UI with dropdown options
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Select the pipeline action'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
 
 jobs:
   terraform:
-    name: "Terraform Infrastructure"
+    name: "Terraform Execution"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,20 +30,19 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      # FIXED: Clean initialization without invalid command-line flags
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan -input=false
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+      # Dynamically runs apply or destroy based on your UI dropdown selection
+      - name: Terraform Run
+        run: terraform ${{ github.event.inputs.action }} -auto-approve -input=false
 
   deploy-app:
     name: "Deploy Application"
     needs: terraform
     runs-on: ubuntu-latest
+    # This step only runs if you selected 'apply'. It skips automatically during a destroy run.
+    if: ${{ github.event.inputs.action == 'apply' }}
 
     steps:
       - name: Checkout Code
