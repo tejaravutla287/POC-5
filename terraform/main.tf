@@ -6,12 +6,9 @@ terraform {
       version = "~> 5.0"
     }
   }
-  backend "remote" {
-    organization = "Bhanu_Teja"
-    workspaces {
-      name = "aws-eks-poc"
-    }
-  }
+
+  # Removed Terraform Cloud remote backend and replaced with local backend
+  backend "local" {}
 }
 
 provider "aws" {
